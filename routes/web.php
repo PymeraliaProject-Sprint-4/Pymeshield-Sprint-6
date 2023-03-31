@@ -29,7 +29,7 @@ use App\Http\Controllers\RestoreController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\ImageDeviceController;
 use App\Models\Device;
-
+//
 
 /*
 |--------------------------------------------------------------------------
