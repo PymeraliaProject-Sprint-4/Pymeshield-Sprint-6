@@ -125,7 +125,10 @@ class BudgetController extends Controller
             ->join('companies', 'companies.id', '=', 'users.company_id')
             ->select("budgets.created_at", "budgets.updated_at", "budgets.status", "budgets.id")
             ->where('users.id', '=', $idclient)
-            ->orderBy('budgets.updated_at', 'desc')->get();
+            ->groupBy('budgets.id')
+            ->orderBy('budgets.updated_at', 'desc')
+            ->get();
+
             return response()->json($data); //Retornar json vara vue
 
     }
