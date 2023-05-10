@@ -47,20 +47,25 @@ class EmblemController extends Controller
     $request->validate([
         'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
     ]);
-    
+
     if($request->file('image')){
         $image = $request->file('image');
         $path = 'img/imatgesemblemes/';
         $filename = time() . '.' . $image->getClientOriginalName();
+
+
+        if (!file_exists(public_path($path))) {
+            mkdir(public_path($path), 0755, true);
+        }
+
         $guardar = $request->file('image')->move($path, $filename);
-        //dd($guardar);
         $emblem->image = $path . $filename;
     }
 
     $emblem->course_id = $request->course_id;
 
     $emblem->save();
-    
+
     return redirect()->route('emblems.index');
 }
 

@@ -41,7 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/devicelist', [InventoryController::class, 'index']);
     Route::get('kivy/report', [ReportController::class, 'indexmobil']);
     // Route::get('kivy/report/{id}/', [ReportController::class, 'indexmobilID']);
-    Route::get('/all-data', [BudgetController::class, 'showAcceptModify'])->name('all-data');
+    Route::get('/all-data/{budget}', [BudgetController::class, 'showAcceptModify'])->name('all-data');
 
     /** ----- EQUIP 4 ------ */
     //Controlador de la vista página Aceptación Tareas
@@ -63,7 +63,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/buscador-budgetTaks/{buscado}', [BudgetController::class, 'search'])->name('buscador-budgetTaks');
     Route::put('/edit-accepted/{idTask}', [BudgetController::class, 'updateAccepted'])->name('edit-accepted');
     Route::put('/add-price/{id}/{price}', [BudgetController::class, 'updatePrice'])->name('add-price');
-    Route::get('/get-total', [BudgetController::class, 'getTotal'])->name('get-total');
+    Route::get('/get-total/{budget}', [BudgetController::class, 'getTotal'])->name('get-total');
 
     // CRUD tasks
     Route::get('/questionnaires-data', [QuestionnaireController::class, 'allQuestionnaires'])->name('questionnaires-data');
@@ -72,7 +72,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/new-task', [TaskController::class, 'store'])->name('new-task');
     Route::put('/edit-task/{idTask}', [TaskController::class, 'update'])->name('edit-task');
     Route::delete('/delete-task/{idTask}', [TaskController::class, 'destroy'])->name('delete-task');
-    Route::get('/buscador-tasks/{buscado}', [TaskController::class, 'search'])->name('buscador-tasks');
+    Route::get('/buscador-tasks/{buscado}/{budget}', [TaskController::class, 'search'])->name('buscador-tasks');
 
 
     // Asignar Precios

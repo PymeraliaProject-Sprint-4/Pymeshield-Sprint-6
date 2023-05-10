@@ -23,6 +23,6 @@ class CompanySeeder extends Seeder
             'cif' => 'A35864370',
         ]);
 
-        Company::factory(50)->create();
+        #Company::factory(50)->create();
     }
 }

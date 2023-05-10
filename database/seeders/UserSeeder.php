@@ -62,19 +62,5 @@ class UserSeeder extends Seeder
 
         $admin->assignRole('admin');
 
-        User::factory(50)->create()->each(function ($user) {
-
-            switch ($user->type) {
-                case 'admin':
-                    $user->assignRole('admin');
-                    break;
-                case 'worker':
-                    $user->assignRole('worker');
-                    break;
-                case 'client':
-                    $user->assignRole('client');
-                    break;
-            }
-        });
     }
 }

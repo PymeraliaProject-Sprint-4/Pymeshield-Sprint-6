@@ -1,14 +1,10 @@
 @extends('layouts.admin')
 
 @section('content')
-    <?php
-    $idreport = \Request::getPathInfo();
-    $idreport = substr($idreport, 8);
-    ?>
-    <h1 class="p-3 text-center font-medium">{{ __('report.titlereport') }} {{ $idreport }}</h1>
+    <h1 class="p-3 text-center font-medium">{{ __('report.titlereport') }} {{ $id }}</h1>
     <div class="flex justify-end">
 
-        <a href="{{ route('report.pdf', [$idreport]) }}" class="botonPersonalizado"
+        <a href="{{ route('report.pdf', [$id]) }}" class="botonPersonalizado"
             onclick="return disableButton(this)">{{ __('table.pdf') }}</a>
 
     </div>

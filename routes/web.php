@@ -66,7 +66,7 @@ Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('p
 Route::get('logout', [LogoutController::class, 'logout'])->name('logout');
 
 //Crud Usuari
-Route::middleware(['auth', 'check_access_admin', 'log.user'])->group(function () {
+Route::middleware(['log.user'])->group(function () {
     Route::get('userList', [UserController::class, 'userList'])->name('userList');
     Route::get('userListhidden', [UserController::class, 'userListhidden'])->name('userListhidden');
 
@@ -84,7 +84,7 @@ Route::middleware(['auth', 'check_access_admin', 'log.user'])->group(function ()
 });
 
 //Crud empresas
-Route::middleware(['auth', 'check_access_admin', 'log.company'])->group(function () {
+Route::middleware(['log.company'])->group(function () {
     Route::get('listadoEmpresas/listCompanies', [CompanyController::class, 'listCompanies'])->name('company.listCompanies');
     Route::get('listadoEmpresas/listcompanyshidden', [CompanyController::class, 'listcompanieshiddenDatos'])->name('company.listcompanyshidden');
 
@@ -147,7 +147,7 @@ Route::get('admin', function () {
 
 // grup2
 /* Grup de rutes per a CRUD Informe */
-Route::middleware(['auth', 'check_access_admin', 'log.report'])->group(function () {
+Route::middleware(['log.report'])->group(function () {
     Route::get('report', [ReportController::class, 'index'])->name('report.index')->middleware('auth', 'check_access_admin');
     Route::get('report/client', [ReportController::class, 'indexClient'])->name('report.user.index')->middleware('auth', 'check_access_client');
     Route::post('report', [ReportController::class, 'store'])->name('report.store')->middleware('auth', 'check_access_admin');
@@ -159,7 +159,7 @@ Route::middleware(['auth', 'check_access_admin', 'log.report'])->group(function 
     Route::post('/report/{id}', [ReportController::class, 'modificar'])->name('report.modificar')->middleware('auth', 'check_access_admin');
 });
 //Question ROUTES
-Route::middleware(['auth', 'check_access_admin', 'log.question'])->group(function () {
+Route::middleware(['log.question'])->group(function () {
     Route::get('question', [QuestionController::class, 'index'])->name('question.index');
     Route::post('question', [QuestionController::class, 'store'])->name('question.store');
     Route::get('question/create', [QuestionController::class, 'create'])->name('question.create');
@@ -171,7 +171,7 @@ Route::middleware(['auth', 'check_access_admin', 'log.question'])->group(functio
 });
 
 //Questionnaire ROUTES
-Route::middleware(['auth', 'check_access_admin', 'log.questionnaire'])->group(function () {
+Route::middleware(['log.questionnaire'])->group(function () {
     Route::get('questionnaire', [QuestionnaireController::class, 'index'])->name('questionnaire.index');
     Route::get('questionnaire/create', [QuestionnaireController::class, 'create'])->name('questionnaire.create');
     Route::post('questionnaire', [QuestionnaireController::class, 'store'])->name('questionnaire.store');
@@ -194,7 +194,7 @@ Route::post('audit/save/{id}', [AuditController::class, 'store'])->name('audit.s
 
 //EQUIP3 ----------------------------------/////////////////
 //Part Admin Crear visualitzar
-Route::middleware(['auth', 'check_access_admin', 'log.course'])->group(function () {
+Route::middleware(['log.course'])->group(function () {
     Route::get('course', [CourseController::class, 'index'])->name('course.index');
     Route::get('course/categories', [CourseController::class, 'coursecategories'])->name('course.categories');
     Route::get('categories/index_data', [CourseController::class, 'index_data_categories'])->name('course.index_data_categories');
@@ -243,7 +243,7 @@ Route::middleware(['auth', 'check_access_admin', 'log.course'])->group(function 
     Route::get('course/{id}/unHide', [CourseController::class, 'unHide'])->name('course.unHide');
 });
 
-Route::middleware(['auth', 'check_access_client', 'log.course'])->group(function () {
+Route::middleware(['log.course'])->group(function () {
     //Part Client Crear Cursos + visualitzar
     Route::get('/course/client', [CourseController::class, 'index_client'])->name('course.client')->middleware('auth', 'check_access_client');
     Route::get('course/client_data', [CourseController::class, 'client_data'])->name('course.client_data')->middleware('auth', 'check_access_client');
@@ -284,7 +284,7 @@ Route::post('activity/{activityId}/user/{userId}/qualify', [DeliveryController::
 
 Route::get('acceptacio-tasques/{id}', [TaskController::class, 'acceptacioTasques'])->name('acceptacio-tasques')->middleware('auth', 'check_access_client'); //con name() le asignas un nombre para llamarlo en los diferentes archivos
 
-Route::get('modificar_presupuesto', function () {
+Route::get('modificar_presupuesto/{id}', function () {
     return view('Presupuestos/modificar_presupuesto/index');
 })->name('modificar_presupuesto')->middleware('auth', 'check_access_client');
 
@@ -299,7 +299,7 @@ Route::get('mostrar-tareas/{id}', [TaskController::class, 'mostrarTareas'])->nam
 // Kanban
 Route::get('kanban', [TaskController::class, 'kanban'])->name('vista-kanban')->middleware('auth', 'check_access_client');
 Route::get('tasks', [TaskController::class, 'tasksKanban'])->name('tasks-kanban')->middleware('auth', 'check_access_client');
-Route::get('tasks-admin', [TaskController::class, 'tasksKanbanAdmin'])->name('tasks-kanban')->middleware('auth', 'check_access_client');
+Route::get('tasks-admin', [TaskController::class, 'tasksKanbanAdmin'])->name('tasks-kanban-admin')->middleware('auth', 'check_access_client');
 Route::put('tasks-update/{id}', [TaskController::class, 'updateState'])->name('update-state')->middleware('auth', 'check_access_client');
 Route::get('kanban-admin', [TaskController::class, 'kanbanAdmin'])->name('vista-kanbanAdmin')->middleware('auth', 'check_access_admin');
 

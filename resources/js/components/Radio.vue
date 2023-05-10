@@ -34,7 +34,7 @@
                       <UserIcon class="h-6 w-6 text-black"/></div>
                     <div v-else-if="option.value === 'No aceptada'" role="button" aria-pressed="false" :aria-label="option.value">
                       <XMarkIcon class="h-6 w-6 text-black" /></div>
-                    <div v-else v-html="option.html" role="button" aria-pressed="false" :aria-label="option.value"></div>
+                    <div v-else  role="button" aria-pressed="false" :aria-label="option.value">P</div>
                     </RadioGroupLabel>
                   </div>
                 </div>

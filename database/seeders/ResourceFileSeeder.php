@@ -15,6 +15,6 @@ class ResourceFileSeeder extends Seeder
      */
     public function run()
     {
-        ResourceFile::factory(12)->create();
+        #ResourceFile::factory(12)->create();
     }
 }

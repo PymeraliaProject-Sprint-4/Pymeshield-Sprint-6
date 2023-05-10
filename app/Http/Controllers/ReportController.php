@@ -6,6 +6,7 @@ use App\Models\Questionnaire;
 use App\Models\Report;
 use App\Models\User;
 use Carbon\Carbon;
+use File;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use PDF;
@@ -21,27 +22,27 @@ class ReportController extends Controller
             ->orderBy('updated_at', 'desc')
             ->paginate(10);
 
-            $questionnaires = Questionnaire::all();
-            $users = User::all();
+        $questionnaires = Questionnaire::all();
+        $users = User::all();
 
-            return view('report.index', compact('reports', 'questionnaires', 'users'));
-        }
+        return view('report.index', compact('reports', 'questionnaires', 'users'));
+    }
 
-        public function indexClient()
-        {
-            //pagina principal de informes mostra llistat informes (solo sin completar)
-            $userId = Auth::id();
-            $reports = Report::whereNull('hidden')
-                ->where('user_id', $userId)
-                ->orderBy('status', 'asc')
-                ->orderBy('updated_at', 'desc')
-                ->paginate(10);
+    public function indexClient()
+    {
+        //pagina principal de informes mostra llistat informes (solo sin completar)
+        $userId = Auth::id();
+        $reports = Report::whereNull('hidden')
+            ->where('user_id', $userId)
+            ->orderBy('status', 'asc')
+            ->orderBy('updated_at', 'desc')
+            ->paginate(10);
 
-                $questionnaire = Questionnaire::all();
-                $users = User::all();
+        $questionnaire = Questionnaire::all();
+        $users = User::all();
 
-                return view('report.index_user', compact('reports', 'questionnaire', 'users'));
-            }
+        return view('report.index_user', compact('reports', 'questionnaire', 'users'));
+    }
     public function show($id)
     {
         //pagina que mostra els detalls de informes
@@ -57,7 +58,7 @@ class ReportController extends Controller
             ->join('type_measures', 'type_measures.id', '=', 'answers.type_measure_id')
             ->where('reports.id', '=', $id)
             ->get();
-        return view('report.show', compact('report'));
+        return view('report.show', compact('report', 'id'));
     }
     public function showClient($id)
     {
@@ -76,13 +77,16 @@ class ReportController extends Controller
             ->where('reports.id', '=', $id)
             ->where('user_id', $userId)
             ->get();
-        return view('report.show_client', compact('report'));
+        return view('report.show_client', compact('report', 'id'));
     }
     public function pdf($id)
     {
         $report = Report::with(['answers', 'answers.impact', 'answers.intervention', 'answers.probability', 'answers.question', 'answers.risk', 'answers.typeMeasure'])
             ->findOrFail($id);
-
+        // crea carpeta fonts si no existe
+        if (!File::exists(('fonts'))) {
+            File::makeDirectory(storage_path('fonts'));
+        }
         $today = Carbon::now()->format('d/m/Y');
         $pdf = PDF::loadView('report.pdf', compact('report', 'today'))->setPaper('legal', 'landscape');
         return $pdf->stream();

@@ -17,10 +17,10 @@ class DeviceSeeder extends Seeder
      */
     public function run()
     {
-        Device::factory(50)->create();
-        $devices = Device::all();
+        #Device::factory(50)->create();
+        //$devices = Device::all();
 
-        foreach ($devices as $device) {
+        /*foreach ($devices as $device) {
             $size = 300;
             $filename = 'device_' . $device->id . '.png';
             $storagePath = public_path('devices_qr/' . $filename);
@@ -30,6 +30,6 @@ class DeviceSeeder extends Seeder
             }
 
             QrCode::format('png')->size($size)->generate($device->id, $storagePath);
-        }
+        }*/
     }
 }

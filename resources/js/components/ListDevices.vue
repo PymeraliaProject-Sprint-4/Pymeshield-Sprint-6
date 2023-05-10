@@ -5,7 +5,7 @@
                 <p class="text-2xl font-semibold">Listado dispositivos</p>
             </div>
             <div class="flex items-center">
-                <button class="bg-orange-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
                     @click="openModalCrear()">Crear dispositivo</button>
             </div>
         </div>
@@ -59,11 +59,11 @@
                         </button>
                         <button
                             @click="openModalEditar(device.id, device.brand, device.model, device.mac_ethernet, device.mac_wifi, device.type_device_id, device.state, device.serial_number, device.description, device.company_id)"
-                            class="bg-orange-400 hover:bg-orange-600  text-white font-bold py-2 px-2 ml-2 rounded">
+                            class="bg-blue-500 hover:bg-blue-600  text-white font-bold py-2 px-2 ml-2 rounded">
                             <PencilSquareIcon class="h-6 w-6 text-white-400" aria-hidden="true" />
                         </button>
                         <button @click="openModalImages(device.id)"
-                            class="bg-blue-500 hover:bg-blue-600  text-white font-bold py-2 px-2 ml-2 mt-1 rounded">
+                            class="bg-orange-500 hover:bg-orange-600  text-white font-bold py-2 px-2 ml-2 mt-1 rounded">
                             <PhotoIcon class="h-6 w-6 text-white-400" aria-hidden="true" />
                         </button>
                         <button @click="openModalQr(device.id)"

@@ -15,6 +15,6 @@ class QuestionnaireSeeder extends Seeder
      */
     public function run()
     {
-        Questionnaire::factory(12)->create();
+        #Questionnaire::factory(12)->create();
     }
 }

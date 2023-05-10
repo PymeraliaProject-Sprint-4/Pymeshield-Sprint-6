@@ -15,6 +15,6 @@ class ResourceTextSeeder extends Seeder
      */
     public function run()
     {
-        ResourceText::factory(12)->create();
+        #ResourceText::factory(12)->create();
     }
 }

@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Budget; //usamos el Modelo referente a la tabla Budget 
+use App\Models\Budget; //usamos el Modelo referente a la tabla Budget
 
 class BudgetSeeder extends Seeder
 {
@@ -15,6 +15,6 @@ class BudgetSeeder extends Seeder
      */
     public function run()
     {
-        Budget::factory(50)->create();
+        #Budget::factory(50)->create();
     }
 }

@@ -507,13 +507,20 @@
 </template>
 
 <script>
+import { ref } from 'vue'
+import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
+import { PlusCircleIcon, ShieldCheckIcon, PencilSquareIcon, EyeSlashIcon } from '@heroicons/vue/24/outline'
 
 import axios from 'axios';
 import { PlusIcon, TrashIcon } from '@heroicons/vue/24/outline'
 
 
 export default {
+    components: {
+        ref, Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot, PlusCircleIcon, ShieldCheckIcon, PencilSquareIcon, EyeSlashIcon, PlusIcon, TrashIcon
+    },
     data() {
+
         return {
             ModalCrear: ref(false),
             NotificacionCrear: ref(false),
@@ -645,12 +652,6 @@ export default {
         }
     },
 };
-</script>
-
-<script setup>
-import { ref } from 'vue'
-import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import { PlusCircleIcon, ShieldCheckIcon, PencilSquareIcon, EyeSlashIcon } from '@heroicons/vue/24/outline'
 </script>
 
 

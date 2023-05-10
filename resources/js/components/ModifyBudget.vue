@@ -1,12 +1,13 @@
 <template>
     <div>
+        <h1 class="p-3 text-center font-medium">{{ $t('task.task-list-title') }}</h1>
         <div class="mb-1">
             <div class="flex justify-end m-2">
                 <div class="mb-1 xl:w-96">
                     <div class="input-group relative flex flex-wrap items-stretch w-full mb-4">
                         <input type="text" id="buscador" name="buscador"
                             class="mr-1 form-control relative flex-auto min-w-0 block px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition  m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                            :placeholder="$t('search_task')" aria-label="Search" autocomplete="off"
+                            :placeholder="$t('task.search_task')" aria-label="Search" autocomplete="off"
                             v-model="buscado /* ruteado a la variable buscado de data() */"
                             @keyup="search /* llama al método cuando acabas de pulsar la tecla */" @keydown="keydown"
                             v-on:keypress="isLetter($event)" @copy.prevent @paste.prevent>
@@ -20,19 +21,19 @@
                 <thead>
                     <tr class="bg-orange-400 text-white">
                         <th class="px-6 py-3 uppercase">
-                            {{ $t("survey.answer") }}
+                            {{ $t("task.survey.answer") }}
                         </th>
                         <th class="px-6 py-3 uppercase">
-                            {{ $t("recommendation") }}
+                            {{ $t("task.recommendation") }}
                         </th>
                         <th class="px-6 py-3 uppercase">
-                            {{ $t("danger") }}
+                            {{ $t("task.danger") }}
                         </th>
                         <th class="px-6 py-3 uppercase">
-                            {{ $t("managed") }}
+                            {{ $t("task.managed") }}
                         </th>
                         <th class="px-6 py-3 uppercase">
-                            {{ $t("price") }}
+                            {{ $t("task.price") }}
                         </th>
                         <th class="px-6 py-3 uppercase"></th>
                     </tr>
@@ -95,7 +96,7 @@
                 <button
                     class="bg-orange-400 hover:bg-orange-600 font-medium py-1 px-2 mr-4 rounded-lg  transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-110 ml-auto block flex items-center"
                     @click.prevent="finalBudget()">
-                    <i class="far fa-save mr-2"></i>{{ $t("finish_budget") }}
+                    <i class="far fa-save mr-2"></i>{{ $t("task.finish_budget") }}
                 </button>
             </div>
         </div><!-- Paginación -->
@@ -121,13 +122,12 @@ export default {
 
     },
     mounted: function () {
-
-        console.log(this.tasks)
     },
     data() {
         return {
             url: 'all-data',
             buscado: '',
+            budget: null,
             totals: '',
             tasks: [],
             taskdata: {},
@@ -163,7 +163,7 @@ export default {
             else e.preventDefault(); // If not match, don't add to input text
         },
         getTotal() {
-            this.$axios.get('get-total').then(res => {
+            this.$axios.get('get-total/' + this.budget).then(res => {
                 this.totals = res.data;
                 return
             });
@@ -172,6 +172,14 @@ export default {
 
         finalBudget() {
             this.final_budget = true;
+            Swal.fire({
+                title: 'Enhorabuena!',
+                text: 'Presupuesto finalizado!',
+                icon: 'success',
+                didClose: function () {
+                    history.back();
+                }
+            });
         },
 
         showAll() {
@@ -237,8 +245,13 @@ export default {
         //Aquesta funció recupera les dades de les tasques fent una sol·licitud GET a l'URL 'tasks-data' mitjançant la biblioteca axios.
         //En cas de resposta correcta, actualitza l'estat de "tasques" del component amb les dades retornades de l'API.
         getTasks(page = 1) {
+            let budget = window.location.pathname.split('/').pop();
             if (this.url == 'buscador-budgetTaks/' + this.buscado) {
-                this.$axios.get(this.url).then(res => {
+                this.$axios.get(this.url, {
+                    params: {
+                        budget
+                    },
+                }).then(res => {
                     this.tasks = res.data
                     this.tasks.forEach(task => {
                         if (task.manages == 'Me lo gestiono yo') {
@@ -250,7 +263,8 @@ export default {
                 });
             } else {
                 let id = 5;
-                this.$axios.get(this.url, {
+                this.budget = window.location.pathname.split('/').pop();
+                this.$axios.get(this.url + '/' + this.budget, {
                     params: {
                         id,
                         page

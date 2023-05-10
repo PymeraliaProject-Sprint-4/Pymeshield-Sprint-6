@@ -224,21 +224,13 @@
                                                                 </div>
                                                                 <div class="w-full">
                                                                     <div class="relative">
-                                                                        <label for="company_name"
-                                                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-black">{{
-                                                                                $t('company') }}</label>
-                                                                        <input v-model="selectedCompany" list="companies" id="company_name"
-                                                                            class="w-full h-10 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-orange-400 focus:border-orange-400 pl-6"
-                                                                            required>
-                                                                        <datalist id="companies">
-                                                                            <option value="" disabled selected>{{ $t('select_company') }}
-                                                                            </option>
-                                                                            <option v-for="company in companies" :key="company.id"
-                                                                                :value="company.id">{{ company.name }}</option>
-                                                                        </datalist>
-                                                                        <span v-if="!selectedCompany"
-                                                                            class="absolute right-0 top-8 mt-2 mr-2 text-red-500">*</span>
-                                                                    </div>
+                                                                        <label for="company_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-black">{{ $t('company') }}</label>
+                                                                        <select v-model="selectedCompany" id="company_name" class="w-full h-10 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-orange-400 focus:border-orange-400 pl-6" required>
+                                                                            <option value="" disabled selected>{{ $t('select_company') }}</option>
+                                                                            <option v-for="company in companies" :key="company.id" :value="company.id">{{ company.name }}</option>
+                                                                        </select>
+                                                                        <span v-if="!selectedCompany" class="absolute right-0 top-8 mt-2 mr-2 text-red-500">*</span>
+                                                                    </div>                                                                    
                                                                 </div>
                                                                 <div class="w-full">
                                                                     <div class="relative">
@@ -602,7 +594,9 @@ export default {
                     this.selectedCompany = '';
                     this.selectedType = '';
                     this.ModalCrear = false;
+                    this.getUsers();
                 })
+                
                 .catch(error => {
                     console.log(error.response)
                 })

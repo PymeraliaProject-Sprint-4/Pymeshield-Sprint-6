@@ -196,7 +196,7 @@ export default {
                 return [
                     { name: this.$t('profile'), href: '/Personal_Profile', icon: IdentificationIcon },
                     { name: this.$t('help'), href: '/manuals/manual_usuari.pdf', target: '_blank', icon: LifebuoyIcon },
-                    { name: this.$t('sign-out'), href: '/logout', icon: WrenchScrewdriverIcon, class: 'btn btn-danger bg-red-500 hover:bg-red-600', style: "background-color: #EF4444;" },
+                    { name: this.$t('sign-out'), href: '/logout', icon: ArrowLeftOnRectangleIcon, class: 'btn btn-danger bg-red-500 hover:bg-red-600', style: "background-color: #EF4444;" },
                 ];
             }
         },

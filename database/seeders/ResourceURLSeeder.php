@@ -15,6 +15,6 @@ class ResourceURLSeeder extends Seeder
      */
     public function run()
     {
-        ResourceURL::factory(12)->create();
+        #ResourceURL::factory(12)->create();
     }
 }

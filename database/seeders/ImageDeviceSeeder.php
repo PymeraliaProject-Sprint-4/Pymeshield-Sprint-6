@@ -15,6 +15,6 @@ class ImageDeviceSeeder extends Seeder
      */
     public function run()
     {
-        ImageDevice::factory(50)->create();
+        #ImageDevice::factory(50)->create();
     }
 }

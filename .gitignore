@@ -26,3 +26,4 @@ _ide_helper_models.php
 /public/img/imatgesemblemes/*
 lang/php_*.json
 /public/devices_qr/*
+/storage/fonts/*

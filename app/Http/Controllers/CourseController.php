@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Storage;
 
+use function PHPUnit\Framework\fileExists;
+
 class CourseController extends Controller
 {
     public function index()
@@ -232,43 +234,6 @@ class CourseController extends Controller
         ]);
     }
 
-    // public function update($id, Request $request)
-    // {
-    //     $course = Course::find($id);
-    //     $course->name = strip_tags($request->name_edit);
-    //     $course->description = strip_tags($request->description_edit);
-    //     $course->save();
-    //     $courseId = $course->id;
-
-    //     $userIds = $request->selectedUsers;
-
-    //     // Crear registros en la tabla course_user para cada usuario del curso
-    //     foreach ($userIds as $userId) {
-    //         if (isset($userId)) {
-    //             $courseUser = new CourseUser;
-    //             $courseUser->course_id = $course->id;
-    //             $courseUser->user_id = $userId;
-    //             $courseUser->save();
-    //         }
-    //     }
-
-    //     $course->users()->sync($userIds);
-
-    //     // Obtener todos los cursos para actualizar la tabla
-    //     $courses =  Course::whereNull('hidden')
-    //         ->orderBy('updated_at', 'desc')
-    //         ->with(['users' => function ($query) {
-    //             $query->select('user_id');
-    //         }])
-    //         ->get();
-
-    //     // Devolver los cursos actualizados en formato JSON
-    //     return response()->json([
-    //         'id' => $courseId,
-    //         'courses' => $courses,
-    //     ]);
-    // }
-
     public function update($id, Request $request)
     {
         $course = Course::findOrFail($id);
@@ -395,10 +360,18 @@ class CourseController extends Controller
 
         $validated['users'] = json_decode($validated['users'], true);
 
-        // Guardar la imagen
-        $imageName = time() . '.' . $request->image->extension();
-        $path = $request->file('image')->storeAs('img/imatgescursos/', $imageName, 'public');
-        // Crear el nuevo curso en la base de datos
+        if($request->file('image')){
+            $imageName = $request->file('image');
+            $path  = 'img/imatgescursos/';
+            //Per a evitar que pete si no detecta la carpeta
+            $filename = time() . '.' . $imageName->getClientOriginalName();
+                if (!file_exists(public_path($path))){
+                    mkdir(public_path($path), 0755, true);
+                    }
+                $guardar = $request->file('image')->move($path, $filename);
+                $validated->image = $path . $filename;
+        }
+        // Crea el nou curso e la base de dades
         $course = new Course();
         $course->name = $validated['name'];
         $course->description = $validated['description'];
@@ -416,7 +389,7 @@ class CourseController extends Controller
         }
 
 
-        // Obtener todos los cursos para actualizar la tabla
+        // Agafa tots els cursos per actualizar la taula
         $courses =  Course::whereNull('hidden')
             ->orderBy('updated_at', 'desc')
             ->with(['users' => function ($query) {
@@ -424,7 +397,7 @@ class CourseController extends Controller
             }])
             ->get();
 
-        // Devolver los cursos actualizados en formato JSON
+        // Torna els cursos actualizats en format JSON
         return response()->json([
             'id' => $course->id,
             'courses' => $courses,

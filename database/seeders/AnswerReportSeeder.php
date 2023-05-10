@@ -15,6 +15,6 @@ class AnswerReportSeeder extends Seeder
      */
     public function run()
     {
-        AnswerReport::factory(100)->create();
+        #AnswerReport::factory(100)->create();
     }
 }

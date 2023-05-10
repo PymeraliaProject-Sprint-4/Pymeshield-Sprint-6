@@ -22,7 +22,7 @@
                         <p class="text-sm text-gray-900">{{ result.status }}</p>
                     </td>
                     <td class="px-2 py-2 text-center">
-                        <p class="text-sm text-gray-900"><a :href="'modificar_presupuesto'" class="text-base font-medium bg-blue-500 hover:bg-blue-400 text-white py-2 px-4 rounded-full transition-colors duration-300">{{ $t('budget.price') }}</a></p>
+                        <p class="text-sm text-gray-900"><a @click.prevent="assignID(result.id)" class="text-base font-medium bg-blue-500 hover:bg-blue-400 text-white py-2 px-4 rounded-full transition-colors duration-300">{{ $t('budget.price') }}</a></p>
                     </td>
                 </tr>
             </tbody>
@@ -46,9 +46,9 @@ export default {
     data() {
         return {
             budgetToColumns: [],
+            id_budget: null
         }
     },
-
     methods: {
         async getBudgets() {
             try {
@@ -62,7 +62,12 @@ export default {
         /** Método que formatea la fecha */
         formatDate(date) {
             return format(new Date(date), this.$t('date-format'));
-        }
+        },
+
+        assignID(id){
+            this.id_budget = id
+            location.href ='modificar_presupuesto/' + this.id_budget;
+        },
     },
 }
 

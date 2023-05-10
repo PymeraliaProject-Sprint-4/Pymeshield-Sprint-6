@@ -449,8 +449,25 @@
 
 <script>
 import axios from 'axios';
+import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
+import {
+    AcademicCapIcon,
+    PlusIcon,
+    TrashIcon,
+    PencilSquareIcon,
+    ArrowLeftCircleIcon,
+    ArrowRightCircleIcon
+} from '@heroicons/vue/24/outline'
 
 export default {
+    components: {
+        AcademicCapIcon,
+        PlusIcon,
+        TrashIcon,
+        PencilSquareIcon,
+        ArrowLeftCircleIcon,
+        ArrowRightCircleIcon, Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot
+    },
     data() {
         return {
             categories: [],
@@ -517,6 +534,7 @@ export default {
                     this.name = '';
                     this.modal_crear_categoria = false;
                     this.selectedCourse = '';
+                    this.loadCategories();
                 })
                 .catch(error => {
 
@@ -621,17 +639,4 @@ export default {
 }
 
 
-</script>
-
-
-<script setup>
-import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
-import {
-    AcademicCapIcon,
-    PlusIcon,
-    TrashIcon,
-    PencilSquareIcon,
-    ArrowLeftCircleIcon,
-    ArrowRightCircleIcon
-} from '@heroicons/vue/24/outline'
 </script>

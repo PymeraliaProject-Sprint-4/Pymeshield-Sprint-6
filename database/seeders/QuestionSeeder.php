@@ -16,7 +16,7 @@ class QuestionSeeder extends Seeder
      */
     public function run()
     {
-        Question::factory(12)->create()->each(function ($question) {
+        Question::factory(5)->create()->each(function ($question) {
             Answer::factory()->create([
                 'question_id' => $question->id,
                 'name' => 'Sí',

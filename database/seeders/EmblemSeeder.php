@@ -15,6 +15,6 @@ class EmblemSeeder extends Seeder
      */
     public function run()
     {
-        Emblem::factory(12)->create();
+        #Emblem::factory(12)->create();
     }
 }
