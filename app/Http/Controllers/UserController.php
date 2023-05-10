@@ -15,6 +15,7 @@ use App\Models\User; // Agrega esta línea
 use App\Models\Company;
 use Carbon\Carbon;
 use Password;
+use Illuminate\Support\Facades\File;
 
 class UserController extends Controller
 {
@@ -221,7 +222,6 @@ class UserController extends Controller
     public function updateUserAdmin(Request $request)
     {
         $authenticatedUser = Auth::user();
-        $updatedUser = User::find($authenticatedUser->id);
 
         $request->validate([
             'name' => 'required',
@@ -229,23 +229,34 @@ class UserController extends Controller
             'nick_name' => 'required',
             'email' => 'required|email',
             'phone' => 'required',
+            'company_id' => 'required|exists:companies,id', // Validamos que la ID de la compañía exista en la tabla de compañías
         ]);
 
-        $updatedUser->name = $request->input('name');
-        $updatedUser->last_name = $request->input('last_name');
-        $updatedUser->nick_name = $request->input('nick_name');
-        $updatedUser->email = $request->input('email');
-        $updatedUser->phone = $request->input('phone');
+        $authenticatedUser->name = $request->input('name');
+        $authenticatedUser->last_name = $request->input('last_name');
+        $authenticatedUser->nick_name = $request->input('nick_name');
+        $authenticatedUser->email = $request->input('email');
+        $authenticatedUser->phone = $request->input('phone');
+        $authenticatedUser->company_id = $request->input('company_id');
 
-        $updatedUser->save();
 
-        return redirect()->route('Editar-Perfil')->with('success', 'Información actualizada con éxito');
+        DB::table('users')
+            ->where('id', $authenticatedUser->id)
+            ->update([
+                'name' => $authenticatedUser->name,
+                'last_name' => $authenticatedUser->last_name,
+                'nick_name' => $authenticatedUser->nick_name,
+                'email' => $authenticatedUser->email,
+                'phone' => $authenticatedUser->phone,
+                'company_id' => $authenticatedUser->company_id,
+            ]);
+
+        return redirect()->route('PerfilPersonal_Admin')->with('success', 'Información actualizada con éxito');
     }
 
     public function updateUserWorker(Request $request)
     {
         $authenticatedUser = Auth::user();
-        $updatedUser = User::find($authenticatedUser->id);
 
         $request->validate([
             'name' => 'required',
@@ -255,18 +266,25 @@ class UserController extends Controller
             'phone' => 'required',
         ]);
 
-        $updatedUser->name = $request->input('name');
-        $updatedUser->last_name = $request->input('last_name');
-        $updatedUser->nick_name = $request->input('nick_name');
-        $updatedUser->email = $request->input('email');
-        $updatedUser->phone = $request->input('phone');
+        $authenticatedUser->name = $request->input('name');
+        $authenticatedUser->last_name = $request->input('last_name');
+        $authenticatedUser->nick_name = $request->input('nick_name');
+        $authenticatedUser->email = $request->input('email');
+        $authenticatedUser->phone = $request->input('phone');
 
-        $updatedUser->save();
 
-        return redirect()->route('Editar-Perfil')->with('success', 'Información actualizada con éxito');
+        DB::table('users')
+            ->where('id', $authenticatedUser->id)
+            ->update([
+                'name' => $authenticatedUser->name,
+                'last_name' => $authenticatedUser->last_name,
+                'nick_name' => $authenticatedUser->nick_name,
+                'email' => $authenticatedUser->email,
+                'phone' => $authenticatedUser->phone,
+            ]);
+
+        return redirect()->route('PerfilPersonal_Admin')->with('success', 'Información actualizada con éxito');
     }
-
-
 
     public function userInfo()
     {
@@ -276,7 +294,13 @@ class UserController extends Controller
             ->select('users.*', 'companies.name AS company_name')
             ->where('users.id', '=', $user->id)
             ->first();
-
+    
+        return response()->json([$userInfo]);
+    }
+    
+    public function userInfoEmblems()
+    {
+        $user = Auth::user();
         $userEmblem = DB::table('users')
             ->join('course_user', 'users.id', '=', 'course_user.user_id')
             ->join('emblems', 'emblems.course_id', '=', 'course_user.course_id')
@@ -284,9 +308,8 @@ class UserController extends Controller
             ->where('users.id', '=', $user->id)
             ->get();
 
-        return[
+        return [
             'userEmblem' => $userEmblem,
-            'userInfo' => $userInfo
         ];
     }
 
@@ -322,7 +345,7 @@ class UserController extends Controller
 
         $updatedUser->save();
 
-        return redirect()->route('Editar-Perfil');
+        return redirect()->route('Personal-Profile');
     }
 
     public function updateProfileImage(Request $request)
@@ -343,8 +366,14 @@ class UserController extends Controller
         $image = $request->file('profile_image');
         $imageName = $image->getClientOriginalName();
 
+        // Verificar si la carpeta existe
+        $directory = public_path('img/profile_images');
+        if (!File::exists($directory)) {
+            File::makeDirectory($directory, 0755, true);
+        }
+
         // Mover la imagen a la carpeta "public/img/profile_images"
-        $image->move(public_path('img/profile_images'), $imageName);
+        $image->move($directory, $imageName);
 
         // Guardar el nombre de la imagen en la base de datos
         $user->update([
@@ -353,6 +382,7 @@ class UserController extends Controller
 
         return redirect()->route('Editar-Perfil');
     }
+
     public function delete(Request $request)
     {
         $user = $request->user();

@@ -24,24 +24,24 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <tr  v-for="userInfo in user">
                                     <td class="bg-orange-50 text-center">
-                                        <p class="font-medium text-gray-900">{{ user.name }}</p>
+                                        <p class="font-medium text-gray-900">{{ userInfo.name }}</p>
                                     </td>
                                     <td class="bg-orange-50 text-center">
-                                        <p class="font-medium text-gray-900">{{ user.last_name }}</p>
+                                        <p class="font-medium text-gray-900">{{ userInfo.last_name }}</p>
                                     </td>
                                     <td class="bg-orange-50 text-center">
-                                        <p class="font-medium text-gray-900">{{ user.nick_name }}</p>
+                                        <p class="font-medium text-gray-900">{{ userInfo.nick_name }}</p>
                                     </td>
                                     <td class="bg-orange-50 text-center">
-                                        <p class="font-medium text-gray-900">{{ user.email }}</p>
+                                        <p class="font-medium text-gray-900">{{ userInfo.email }}</p>
                                     </td>
                                     <td class="bg-orange-50 text-center">
-                                        <p class="font-medium text-gray-900">{{ user.phone }}</p>
+                                        <p class="font-medium text-gray-900">{{ userInfo.phone }}</p>
                                     </td>
                                     <td class="bg-orange-50 text-center">
-                                        <p class="font-medium text-gray-900">{{ user.company_name }}</p>
+                                        <p class="font-medium text-gray-900">{{ userInfo.company_name }}</p>
                                     </td>
                                 </tr>
                             </tbody>

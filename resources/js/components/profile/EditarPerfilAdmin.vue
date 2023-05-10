@@ -43,7 +43,7 @@
                         <tbody>
                             <tr>
                                 <td class="bg-orange-50 text-center">
-                                    <input v-model="user.name" class="form-input" type="text" />
+                                    <input v-model="user.name" class="form-input" type="text" name="name" />
                                 </td>
                                 <td class="bg-orange-50 text-center">
                                     <input v-model="user.last_name" class="form-input" type="text" />
@@ -58,9 +58,13 @@
                                     <input v-model="user.phone" class="form-input" type="text" />
                                 </td>
                                 <td class="bg-orange-50 text-center">
-                                    <input v-model="user.company_name" class="form-input" type="text" />
+                                    <select v-model="user.company_id" class="form-input">
+                                        <option v-for="company in companies" :value="company.id"
+                                            :selected="company.id === user.company_id">{{ company.name }}</option>
+                                    </select>
                                 </td>
                             </tr>
+
                         </tbody>
                     </table>
                 </div>
@@ -213,7 +217,19 @@ import axios from 'axios';
 export default {
     data() {
         return {
-            user: [],
+            user: {
+                id: '',
+                name: '',
+                last_name: '',
+                email: '',
+                phone: '',
+                nick_name: '',
+                profile_image: '',
+                company_id: '',
+                company_name: ''
+            },
+
+            companies: [],
             showModal: false,
             modal_image: false,
             modal_password: false,
@@ -225,22 +241,37 @@ export default {
     },
     mounted() {
         axios.get('/user-info').then(response => {
-            this.user = response.data;
-        });
+            Object.assign(this.user, response.data[0])
+        })
+
+        axios.get('/company/listAllCompanies').then(response => {
+            this.companies = response.data
+        })
     },
+
     methods: {
         updateUserInfo() {
-            //Aqui fem una perticio post a la ruta
-            //post es per enviar dades
-            axios.post('/PerfilPersonal_Admin/Editar_Perfil/update', this.user) //dades d'usuari this.user
+            let userData = {
+                name: this.user.name,
+                last_name: this.user.last_name,
+                nick_name: this.user.nick_name,
+                email: this.user.email,
+                phone: this.user.phone,
+                company_id: this.user.company_id
+            };
+
+            axios.post('/PerfilPersonal_Admin/Editar_Perfil/update', userData)
                 .then(response => {
-                    window.location.reload();
+                    window.location.href = '/PerfilPersonal_Admin';
+                
                 })
                 .catch(error => {
                     console.error(error);
+                    console.log(userData)
                     alert('Error al actualizar la información del usuario. Por favor, inténtelo de nuevo más tarde.');
                 });
         },
+
         //funcio
         changeImage() {
             // Agafem la imatge del imput
@@ -369,7 +400,7 @@ export default {
 //Script setup es per a que funcionigue el modal de headles
 import { Dialog, DialogOverlay, TransitionChild, TransitionRoot } from '@headlessui/vue'
 </script>
-
+   
 <style scoped>
 td {
     padding: 7px;

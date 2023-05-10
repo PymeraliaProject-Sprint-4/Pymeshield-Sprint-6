@@ -43,7 +43,7 @@
                         <tbody>
                             <tr>
                                 <td class="bg-orange-50 text-center">
-                                    <input v-model="user.name" class="form-input" type="text" />
+                                    <input v-model="user.name" class="form-input" type="text" name="name" />
                                 </td>
                                 <td class="bg-orange-50 text-center">
                                     <input v-model="user.last_name" class="form-input" type="text" />
@@ -58,10 +58,10 @@
                                     <input v-model="user.phone" class="form-input" type="text" />
                                 </td>
                                 <td class="bg-orange-50 text-center">
-                                    <input v-model="user.company_name" class="form-input border-none shadow-none"
-                                        type="text" disabled />
+                                    <p class="font-medium text-gray-900">{{ user.company_name }}</p>
                                 </td>
                             </tr>
+
                         </tbody>
                     </table>
                 </div>
@@ -103,7 +103,7 @@
                             <div class="p-4">
                                 <div class="mb-4">
                                     <label for="image" class="block text-gray-700 mb-2 center"><i
-                                            class="fas fa-images mr-2"></i> {{
+                                            class="fas fa-images mr-2"></i>{{
                                                 $t('select-image')
                                             }}</label>
                                     <input type="file" id="image" name="image"
@@ -161,7 +161,6 @@
                                             class="fas fa-edit mr-2"></i> {{
                                                 $t('change-password')
                                             }}</label>
-
                                     {{ $t('password') }}
                                     <i :class="actualPasswordVisible ? 'far fa-eye' : 'far fa-eye-slash'"
                                         @click="togglePasswordVisibility('actualPassword')"></i>
@@ -195,7 +194,7 @@
                                         <i class="far fa-save mr-2"></i>{{ $t('save') }}
                                     </button>
                                     <button type="button"
-                                        class="bg-gray-300 hover:bg-gray-400 text-black font-medium py-1 px-1 ml-2 rounded-lg transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-110 mr-2 flex items-center"
+                                        class="bg-gray-300 hover:bg-gray-400 text-black font-medium py-1 px-1 rounded-lg transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-110 mr-2 ml-4 flex items-center"
                                         @click="closeModalPassword()">
                                         <i class="fas fa-times mr-2"></i>{{ $t('cancel') }}
                                     </button>
@@ -215,7 +214,19 @@ import axios from 'axios';
 export default {
     data() {
         return {
-            user: [],
+            user: {
+                id: '',
+                name: '',
+                last_name: '',
+                email: '',
+                phone: '',
+                nick_name: '',
+                profile_image: '',
+                company_id: '',
+                company_name: ''
+            },
+
+            companies: [],
             showModal: false,
             modal_image: false,
             modal_password: false,
@@ -227,54 +238,80 @@ export default {
     },
     mounted() {
         axios.get('/user-info').then(response => {
-            this.user = response.data;
-        });
+            Object.assign(this.user, response.data[0])
+        })
+
+       
     },
+
     methods: {
         updateUserInfo() {
-            axios.post('/PerfilPersonal_Admin/Editar_Perfil/update', this.user)
+            let userData = {
+                name: this.user.name,
+                last_name: this.user.last_name,
+                nick_name: this.user.nick_name,
+                email: this.user.email,
+                phone: this.user.phone,
+                company_id: this.user.company_id
+            };
+
+            axios.post('/PerfilPersonal_Worker/Editar_Perfil/update', userData)
                 .then(response => {
-                    window.location.reload();
+                    window.location.href = '/PerfilPersonal_Worker';
+                
                 })
                 .catch(error => {
                     console.error(error);
+                    console.log(userData)
                     alert('Error al actualizar la información del usuario. Por favor, inténtelo de nuevo más tarde.');
                 });
         },
+
+        //funcio
         changeImage() {
-            // Obtener la imagen del input
+            // Agafem la imatge del imput
+            //Sens guardara la imatge que selecionem a la variable image
             const image = document.querySelector('#image').files[0];
 
-            // Crear un objeto FormData y agregar la imagen
+            // Crear un objeto FormData y agregar la imagen al fromData (objecte)
             const formData = new FormData();
+            //append es una funcio de javascript
             formData.append('profile_image', image);
 
-            // Enviar la petición a través de Axios
+            // Enviar la petición POST en Axios
             axios.post('/update-profile-image', formData)
                 .then(response => {
-                    // Manejar la respuesta de la petición
+                    //Mostra un missatge per consola
                     console.log(response.data);
+                    //Actualizar la pagina
                     window.location.reload();
                 })
+                //En cas de erro surtira este missatge per consola
                 .catch(error => {
-                    // Manejar el error de la petición
                     console.log(error);
                 });
         },
+
         deleteImage() {
+            //Ens surtira un missatge de confirmacio
             if (confirm(this.$t('confirmDeleteImage'))) {
+                //this.$t es per fer la traducio
+                // Enviar la petición POST en Axios
                 axios.post('/delete-profile-image')
                     .then(response => {
                         window.location.reload();
                     })
                     .catch(error => {
-                        // Hacer algo con el error si es necesario
+                        console.log(error);
                     });
             }
         },
 
         changePassword() {
+            //es per a evitar que senvie per defecte les dades
             preventDefault();
+            //Variables que agafen la contraseña que posem
+            //('actualPassword') son ides
             const currentPassword = document.getElementById('actualPassword').value;
             const newPassword = document.getElementById('newPassword').value;
             const confirmNewPassword = document.getElementById('confirmNewPassword').value;
@@ -282,6 +319,7 @@ export default {
             // Validaciones
             const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
+            //comproacions
             if (newPassword !== confirmNewPassword) {
                 this.error = this.$t('passwordsDiferents');
                 return;
@@ -290,6 +328,7 @@ export default {
                 return;
             }
 
+            //Ens envia una peticio post en axio per a fer la funcio de cambiar contraseña
             axios.post('/change-password', {
                 current_password: currentPassword,
                 new_password: newPassword,
@@ -305,6 +344,7 @@ export default {
                     alert('No se ha podido cambiar la contraseña. Inténtelo de nuevo más tarde.');
                 });
         },
+        //La icona del ull per a mostrar i ocultar la contrasenya
         togglePasswordVisibility(inputId) {
             const input = document.getElementById(inputId);
             if (input.type === "password") {
@@ -352,10 +392,10 @@ export default {
 };
 </script>
 <script setup>
+//Script setup es per a que funcionigue el modal de headles
 import { Dialog, DialogOverlay, TransitionChild, TransitionRoot } from '@headlessui/vue'
-
 </script>
-
+   
 <style scoped>
 td {
     padding: 7px;
@@ -371,7 +411,6 @@ table {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
 }
 
 .left-table {
